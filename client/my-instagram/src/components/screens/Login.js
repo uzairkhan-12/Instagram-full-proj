@@ -18,25 +18,32 @@ function Login(){
     }
 
     const postResquest = () => {
-        fetch('/signin',{
+        if(!/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email)){
+            M.toast({html:"invalid email",classes:"#b71c1c red darken-4"})
+            return
+        }
+        fetch("http://localhost:5000/signin",{
             method:"POST",
             headers:{
-                "Content-Type":"application/json"},
-            body: JSON.stringify({
-                    email,
-                    password
-                })
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+                email,
+                password
+            })
         }).then(response => response.json())
-        .then(result =>{
+        .then(result => {
             if(result.error){
                 M.toast({html: result.error ,classes:"#b71c1c red darken-4"})
-                return
             }
             else{
-                M.toast({html: "Signed in successfully" , classes:"#1b5e20 green darken-4"})
+                localStorage.setItem("jwt",result.token)
+                localStorage.setItem("user",JSON.stringify(result.user))
+                // dispatch({type:"USER",payload:result.user})
+                M.toast({html: "signed in success" , classes:"#1b5e20 green darken-4"})
                 navigate('/')
             }
-        })
+    }).catch(err => {console.log(err)})
     }
     return(
         <div>
