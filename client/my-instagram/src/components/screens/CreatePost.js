@@ -45,11 +45,11 @@ function CreatePost(){
     .catch(err=>{
       console.log(err)
     })
-    fetch("/createpost",{
+    fetch("http://localhost:5000/createpost",{
       method:"post",
       headers:{
-          "Content-Type":"application/json"
-          // "Authorization":"Bearer "+localStorage.getItem("jwt")
+          "Content-Type":"application/json",
+          "Authorization":"Bearer "+localStorage.getItem("jwt")
       },
       body:JSON.stringify({
           title,
