@@ -1,9 +1,14 @@
 import React from "react";
 import Navbar from "../Navbar";
 import { Link , useNavigate } from "react-router-dom";
-import {useState} from 'react'
+import {useState,useContext} from 'react'
+// import {UserContext} from '../../App'
 import M from 'materialize-css'
+import { useDispatch } from "react-redux";
+import { setActiveUser } from "../../redux/features/userSlice";
 function Login(){
+    // const [state,dispatch] = useContext(UserContext)
+    const dispatch = useDispatch()
     const [email , setEmail] = useState("")
     const [password,setPassword] = useState("")
     let navigate = useNavigate();
@@ -40,6 +45,7 @@ function Login(){
                 localStorage.setItem("jwt",result.token)
                 localStorage.setItem("user",JSON.stringify(result.user))
                 // dispatch({type:"USER",payload:result.user})
+                dispatch(setActiveUser(result.user))
                 M.toast({html: "signed in success" , classes:"#1b5e20 green darken-4"})
                 navigate('/')
             }

@@ -1,6 +1,23 @@
 import React from "react";
 import Navbar from "../Navbar";
+import { useState,useEffect } from "react";
+import { useDispatch, useSelector } from 'react-redux'
 function Profile(){
+    const dispatch = useDispatch()
+    const user = useSelector(state => state.User.activeUser)
+    const [myPics,setMyPics] = useState([])
+    useEffect(()=>{
+        fetch('http://localhost:5000/my-posts',{
+            headers:{
+                "Authorization":"Bearer "+localStorage.getItem('jwt')
+            }
+        })
+        .then(res => res.json())
+        .then(result => {
+            setMyPics(result.myposts)
+            
+        })
+    },[])
     return(
         <div>
             <Navbar />
@@ -17,7 +34,7 @@ function Profile(){
             />
            </div>
            <div>
-            <h4>Uzair khan</h4>
+            <h4>{user? user.name : "loading"}</h4>
             <div>
                 <span style={{marginRight:"20px"}}>40 posts</span>
                 <span style={{marginRight:"20px"}}>40 followers</span>
@@ -26,26 +43,16 @@ function Profile(){
            </div>
            </div>
            <div className="gallery">
-            <img
-            className="item"
-            src="https://images.unsplash.com/photo-1549068106-b024baf5062d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OTV8fHBlcnNvbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
+            {
+                myPics.map(item => {
+                    return(<img
+            key = {item._id}className="item" width="250px" height="250px" style={{marginLeft : "20px",marginRight:"20px" , marginTop:"20px",marginBottom:"50px"}} 
+            src= {item.photo}
             />
-            <img
-            className="item"
-            src="https://images.unsplash.com/photo-1549068106-b024baf5062d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OTV8fHBlcnNvbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-            />
-            <img
-            className="item"
-            src="https://images.unsplash.com/photo-1549068106-b024baf5062d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OTV8fHBlcnNvbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-            />
-            <img
-            className="item"
-            src="https://images.unsplash.com/photo-1549068106-b024baf5062d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OTV8fHBlcnNvbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-            />
-            <img
-            className="item"
-            src="https://images.unsplash.com/photo-1549068106-b024baf5062d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OTV8fHBlcnNvbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-            />
+            )
+                })
+            }
+            
            </div>
         </div>
     )
